@@ -1,0 +1,40 @@
+
+# Define a function for calculating Euclidean distance between two points
+def euclidean_distance(point1, point2):
+    return sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2)) ** 0.5
+
+# Define the KNN algorithm
+def knn(training_data, test_instance, k):
+    distances = []
+    
+    # Calculate distance between test instance and all training instances
+    for index, data_point in enumerate(training_data):
+        distance = euclidean_distance(data_point[:-1], test_instance)
+        distances.append((index, distance))
+    
+    # Sort distances
+    distances.sort(key=lambda x: x[1])
+    
+    # Get the indices of k nearest neighbors
+    neighbors_indices = [index for index, _ in distances[:k]]
+    
+    # Return the majority class among the k nearest neighbors
+    classes = [training_data[i][-1] for i in neighbors_indices]
+    return max(set(classes), key=classes.count)
+
+# Example data
+training_data = [
+    [5, 1, 'A'],
+    [4, 2, 'A'],
+    [2, 2, 'B'],
+    [3, 3, 'B']
+]
+
+test_instance = [3, 1]
+
+# Set the value of k
+k = 3
+
+# Apply KNN algorithm
+predicted_class = knn(training_data, test_instance, k)
+print("Predicted class:", predicted_class)
